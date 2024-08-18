@@ -1,5 +1,6 @@
 # Pink Arrows: An Open-Source Web-Based Skitch Alternative
-Pink Arrows is a lightweight, web-based annotation tool. You can start using it right away at [Pink Arrows](https://pinkarrows.app) with no installation required.
+Pink Arrows is a lightweight, web-based annotation tool. Hosted version at [pinkarrows.app](https://pinkarrows.app) with no installation required.
+
 Download size is ~500kb, and everything runs locally with no internet required. Nothing is stored server-side. It heavily uses [Fabric JS](http://fabricjs.com/)
 
 ![Pink Arrows in Action](assets/readme_gif.gif)
