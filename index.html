@@ -44,7 +44,7 @@
             display: flex;
             align-items: center;
             height: 100%;
-            gap:3px;
+            gap: 3px;
         }
 
         h1 {
@@ -56,6 +56,7 @@
     <noscript>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
     </noscript>
+    <link rel="stylesheet" href="src/plugins/jquery.toast.min.css">
 </head>
 
 <body>
@@ -77,34 +78,36 @@
     </header>
 
     <div id="toolbar" class="toolbar">
-        <button data-mode="NONE" class="tool-btn">
+        <button data-mode="NONE" class="tool-btn" title="(s) Select">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FF007F" class="bi bi-cursor-fill"
                 viewBox="0 0 16 16">
                 <path
                     d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z" />
             </svg>
             Select</button>
-        <button data-mode="ARROW" class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        <button data-mode="ARROW" class="tool-btn" title="(a) Arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                 fill="#FF007F" class="bi bi-arrow-up-right" viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
                     d="M14 2.5a.5.5 0 0 0-.5-.5h-6a.5.5 0 0 0 0 1h4.793L2.146 13.146a.5.5 0 0 0 .708.708L13 3.707V8.5a.5.5 0 0 0 1 0v-6z" />
             </svg>
             Arrow</button>
 
-        <button data-mode="RECT" class="tool-btn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                fill="#FF007F" class="bi bi-app" viewBox="0 0 16 16">
+        <button data-mode="RECT" class="tool-btn" title="(r) Rectangle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FF007F" class="bi bi-app"
+                viewBox="0 0 16 16">
                 <path
                     d="M11 2a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h6zM5 1a4 4 0 0 0-4 4v6a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4H5z" />
             </svg>
             Rectangle</button>
-        <button data-mode="TEXT" class="tool-btn">
+        <button data-mode="TEXT" class="tool-btn" title="(t) Text">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FF007F" class="bi bi-fonts"
                 viewBox="0 0 16 16">
                 <path
                     d="M12.258 3h-8.51l-.083 2.46h.479c.26-1.544.758-1.783 2.693-1.845l.424-.013v7.827c0 .663-.144.82-1.3.923v.52h4.082v-.52c-1.162-.103-1.306-.26-1.306-.923V3.602l.431.013c1.934.062 2.434.301 2.693 1.846h.479L12.258 3z" />
             </svg>
             Text</button>
-        <button data-mode="EMOJI" class="tool-btn" id="emoji-button">
+        <button data-mode="EMOJI" class="tool-btn" id="emoji-button" title="(e) Emoji">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FF007F" class="bi bi-emoji-smile"
                 viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
@@ -112,7 +115,7 @@
                     d="M4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z" />
             </svg>
             Emoji</button>
-        <button class="tool-btn" id="undo-button">
+        <button class="tool-btn" id="undo-button" title="(Ctrl-Z) Undo">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FF007F"
                 class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z" />
@@ -120,7 +123,7 @@
                     d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
             </svg>
         </button>
-        <button class="tool-btn" id="redo-button">
+        <button class="tool-btn" id="redo-button" title="(Ctrl-Shift-Z) Redo">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FF007F" class="bi bi-arrow-clockwise"
                 viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
@@ -129,7 +132,7 @@
             </svg>
         </button>
 
-        <button class="tool-btn" id="download-button">
+        <button class="tool-btn" id="download-button" title="(d) Download">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FF007F" class="bi bi-download"
                 viewBox="0 0 16 16">
                 <path
@@ -137,6 +140,11 @@
                 <path
                     d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
             </svg>
+        </button>
+        <button class="tool-btn" id="copy-image-to-clipboard-button" title="(c) Copy Image to Clipboard">
+            <svg width="18" height="22" viewBox="0 0 18 22" stroke="#FF007F" fill=none stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 11H9.75M6 14H9.75M6 17H9.75M12.75 17.75H15C16.2426 17.75 17.25 16.7426 17.25 15.5V5.10822C17.25 3.97324 16.405 3.01015 15.2739 2.91627C14.9006 2.88529 14.5261 2.85858 14.1505 2.83619M8.34952 2.83619C8.28483 3.04602 8.25 3.26894 8.25 3.5C8.25 3.91421 8.58579 4.25 9 4.25H13.5C13.9142 4.25 14.25 3.91421 14.25 3.5C14.25 3.26894 14.2152 3.04602 14.1505 2.83619M8.34952 2.83619C8.63276 1.91757 9.48842 1.25 10.5 1.25H12C13.0116 1.25 13.8672 1.91757 14.1505 2.83619M8.34952 2.83619C7.97386 2.85858 7.59937 2.88529 7.22608 2.91627C6.09499 3.01015 5.25 3.97324 5.25 5.10822V7.25M5.25 7.25H1.875C1.25368 7.25 0.75 7.75368 0.75 8.375V19.625C0.75 20.2463 1.25368 20.75 1.875 20.75H11.625C12.2463 20.75 12.75 20.2463 12.75 19.625V8.375C12.75 7.75368 12.2463 7.25 11.625 7.25H5.25ZM3.75 11H3.7575V11.0075H3.75V11ZM3.75 14H3.7575V14.0075H3.75V14ZM3.75 17H3.7575V17.0075H3.75V17Z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
         </button>
         <div class="watermark-toggle-container">
             <label for="watermark-toggle" class="mr-2">Watermark</label>
@@ -166,9 +174,23 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body text-center">
-                    Thanks for using Pink Arrows. Contribute to the project by giving us a ⭐️ on <a
+                    <p>Thanks for using Pink Arrows. Contribute to the project by giving us a ⭐️ on <a
                         href='https://github.com/robbalian/pinkarrows'>Github</a> and filing an issue with bugs or
-                    feature requests.
+                    feature requests.</p>
+                    <div class="hotkeys-container" style="text-align: left;">
+                    <h5>Hotkeys</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>(s)</strong> Select</li>
+                        <li><strong>(a)</strong> Arrow</li>
+                        <li><strong>(r)</strong> Rectangle</li>
+                        <li><strong>(t)</strong> Text</li>
+                        <li><strong>(e)</strong> Emoji</li>
+                        <li><strong>(Ctrl-Z)</strong> Undo</li>
+                        <li><strong>(Ctrl-Shift-Z)</strong> Redo</li>
+                        <li><strong>(d)</strong> Download</li>
+                            <li><strong>(c)</strong> Copy Image to Clipboard</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -183,7 +205,8 @@
     crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
-<script src="src/fabric-history.js"></script>
+<script src="src/plugins/fabric-history.js"></script>
+<script src="src/plugins/jquery.toast.min.js"></script>
 <script>
     !function (t, e) { var o, n, p, r; e.__SV || (window.posthog = e, e._i = [], e.init = function (i, s, a) { function g(t, e) { var o = e.split("."); 2 == o.length && (t = t[o[0]], e = o[1]), t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } } (p = t.createElement("script")).type = "text/javascript", p.async = !0, p.src = s.api_host.replace(".i.posthog.com", "-assets.i.posthog.com") + "/static/array.js", (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(p, r); var u = e; for (void 0 !== a ? u = e[a] = [] : a = "posthog", u.people = u.people || [], u.toString = function (t) { var e = "posthog"; return "posthog" !== a && (e += "." + a), t || (e += " (stub)"), e }, u.people.toString = function () { return u.toString(1) + ".people (stub)" }, o = "capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId setPersonProperties".split(" "), n = 0; n < o.length; n++)g(u, o[n]); e._i.push([i, s, a]) }, e.__SV = 1) }(document, window.posthog || []);
     posthog.init('phc_AgTA0UUBxAb1j7ScfjH8NoNcwzA9vnlvYVAumCFxyss', {

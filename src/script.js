@@ -2,8 +2,6 @@ import { createArrow, setArrowHeadPoint } from './arrow.js'
 // Import the functions you need from the SDKs you need
 
 var emojiPicker = null;
-let analytics = null;
-
 
 class CustomTextbox extends fabric.Textbox {
   constructor(text, options) {
@@ -83,9 +81,6 @@ $(document).ready(function () {
     handleFiles(this.files);
     // Clear the input to ensure the change event triggers even if the same file is selected again
     this.value = null;
-    analytics.logEvent('image_upload', {
-      type: 'upload_button',
-    });
   });
 
   // Initialize watermark toggle state from localStorage
@@ -94,8 +89,8 @@ $(document).ready(function () {
 
   // If watermark state is not set in localStorage, default to true
   if (watermarkState === null) {
-      watermarkState = 'true';
-      localStorage.setItem('watermark', watermarkState);
+    watermarkState = 'true';
+    localStorage.setItem('watermark', watermarkState);
   }
 
   watermarkToggle.prop('checked', watermarkState === 'true');
@@ -263,9 +258,6 @@ function handleDrop(e) {
   let dt = e.dataTransfer;
   let files = dt.files;
   handleFiles(files);
-  analytics.logEvent('image_upload', {
-    type: 'drag_drop',
-  });
 }
 
 function handleFiles(files) {
@@ -326,13 +318,10 @@ function redrawCanvas() {
   canvas.renderAll();
 }
 
-function downloadCroppedWithWatermark() {
+async function getImageWithWatermark() {
   var objects = canvas.getObjects();
-  console.log('getting watermark')
-
   if (objects.length === 0) {
-    alert("Canvas is empty!");
-    return;
+    return null;
   }
 
   // Group all objects temporarily to get bounding box
@@ -342,46 +331,84 @@ function downloadCroppedWithWatermark() {
 
   const watermarkEnabled = localStorage.getItem('watermark') === 'true';
 
-
   if (watermarkEnabled) {
-    // Load the watermark
-    fabric.Image.fromURL('assets/watermark.png', function (watermarkImg) {
-      var scaleFactor = 0.1;
-      watermarkImg.scale(scaleFactor);
+    return new Promise((resolve) => {
+      fabric.Image.fromURL('assets/watermark.png', function (watermarkImg) {
+        var scaleFactor = 0.1;
+        watermarkImg.scale(scaleFactor);
 
-      // Position watermark at the bottom right of the cropped area
-      watermarkImg.set({
-        left: boundingBox.left + boundingBox.width - watermarkImg.getScaledWidth(),
-        top: boundingBox.top + boundingBox.height - watermarkImg.getScaledHeight()
+        // Position watermark at the bottom right of the cropped area
+        watermarkImg.set({
+          left: boundingBox.left + boundingBox.width - watermarkImg.getScaledWidth(),
+          top: boundingBox.top + boundingBox.height - watermarkImg.getScaledHeight()
+        });
+
+        canvas.add(watermarkImg);
+        canvas.renderAll();
+
+        const dataURL = canvas.toDataURL({
+          format: 'png',
+          quality: 1.0,
+          left: boundingBox.left,
+          top: boundingBox.top,
+          width: boundingBox.width,
+          height: boundingBox.height,
+          enableRetinaScaling: true
+        });
+
+        canvas.remove(watermarkImg);
+        canvas.renderAll();
+
+        resolve(dataURL);
       });
-      canvas.add(watermarkImg)
-      redrawCanvas()
-      download(boundingBox)
-      canvas.remove(watermarkImg)
-      redrawCanvas()
-      analytics.logEvent('image_download', {});
     });
   } else {
-    download(boundingBox);
-    analytics.logEvent('image_download', {});
+    const dataURL = canvas.toDataURL({
+      format: 'png',
+      quality: 1.0,
+      left: boundingBox.left,
+      top: boundingBox.top,
+      width: boundingBox.width,
+      height: boundingBox.height,
+      enableRetinaScaling: true
+    });
+    return dataURL;
   }
 }
 
-function download(boundingBox) {
-  console.log(boundingBox)
-  var dataURL = canvas.toDataURL({
-    format: 'png',
-    quality: 1.0,
-    left: boundingBox.left,
-    top: boundingBox.top,
-    width: boundingBox.width,
-    height: boundingBox.height,
-    enableRetinaScaling: true
-  });
+async function downloadCroppedWithWatermark() {
+  const dataURL = await getImageWithWatermark();
+
+  if (!dataURL) {
+    $.toast("Canvas is empty")
+    return;
+  }
+
   var link = document.createElement('a');
   link.href = dataURL;
   link.download = 'canvas_image.png';
   link.click();
+  $.toast("Downloaded")
+}
+
+async function copyImageToClipboard() {
+  const dataURL = await getImageWithWatermark();
+
+  if (!dataURL) {
+    $.toast("Canvas is empty")
+    return;
+  }
+
+  fetch(dataURL)
+    .then(res => res.blob())
+    .then(blob => {
+      const item = new ClipboardItem({ 'image/png': blob });
+      navigator.clipboard.write([item]).then(() => {
+        $.toast("Copied to clipboard")
+      }).catch(err => {
+        $.toast("Failed to copy image")
+      });
+    });
 }
 
 // Keyboard event to toggle text mode
@@ -406,7 +433,7 @@ document.addEventListener('keydown', function (e) {
   if (mode == Mode.EDIT_TEXT) {
     return;
   }
-  switch (event.key) {
+  switch (e.key) {
     case 't':
       setMode(Mode.TEXT);
       break;
@@ -423,6 +450,8 @@ document.addEventListener('keydown', function (e) {
     case 'd':
       downloadCroppedWithWatermark();
       break;
+    case 'c':
+      copyImageToClipboard()
     // additional cases can be added as you add more features
     default:
       setMode(Mode.NONE);
