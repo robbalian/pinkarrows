@@ -70,6 +70,10 @@ $(document).ready(function () {
     downloadCroppedWithWatermark()
   })
 
+  $('#copy-image-to-clipboard-button').click(() => {
+    copyImageToClipboard()
+  })
+
   // Add this to handle the button click
   $('#file-upload-button').click(() => {
     console.log('clicked button')
