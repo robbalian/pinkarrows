@@ -14,7 +14,7 @@ If you'd like to contribute with code:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/robbalian/pink-arrows.git
+git clone https://github.com/robbalian/pinkarrows.git
 ```
 
 2. Run a simple http server:
