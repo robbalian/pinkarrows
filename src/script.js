@@ -466,7 +466,59 @@ document.addEventListener('keydown', function (e) {
 
   // Ctrl+V or Cmd+V for MacOS
   if ((e.ctrlKey || e.metaKey) && e.which === 86) {
-    paste();
+    // Check for object in clipboard
+    if (copiedObject) {
+      paste();
+      return;
+    }
+
+    // Try to get clipboard image data
+    navigator.clipboard.read().then(items => {
+      for (const item of items) {
+        if (item.types.includes('image/png' || 'image/jpeg')) {
+          item.getType('image/png').then(blob => {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              fabric.Image.fromURL(event.target.result, function(oImg) {
+                // Calculate the max width (90% of canvas width)
+                const maxWidth = canvas.width * 0.9;
+
+                // Scale image if wider than maxWidth
+                if (oImg.width > maxWidth) {
+                  const scaleFactor = maxWidth / oImg.width;
+                  oImg.scale(scaleFactor);
+                }
+
+                oImg.set({
+                  left: (canvas.width - oImg.getScaledWidth()) / 2,
+                  top: canvas.height * .1,
+                  angle: 0
+                }).setCoords();
+
+                // Find insertion index
+                let insertIndex = canvas.getObjects().findIndex(obj =>
+                  obj.type !== 'image' && obj.type !== 'backgroundImage'
+                );
+
+                // if no non-image objects found, insert at the top
+                if (insertIndex === -1) {
+                  insertIndex = canvas.getObjects().length;
+                }
+
+                // Insert the image at the found index
+                canvas.insertAt(oImg, insertIndex);
+                redrawCanvas();
+                $.toast('Image pasted from clipboard');
+              });
+            };
+            reader.readAsDataURL(blob);
+          });
+        }
+      }
+    }).catch(err => {
+      $.toast('Failed to paste image from clipboard');
+      console.error('Failed to paste image from clipboard', err);
+    })
   }
 
   if ((e.ctrlKey || e.metaKey) && e.which === 90 && !e.shiftKey) {
