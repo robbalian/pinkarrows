@@ -7,6 +7,11 @@ Download size is ~500kb, and everything runs locally with no internet required. 
 
 I really loved Skitch. In fact, the pink Skitch arrows and dumbed-down text became a trademark of mine in multiple jobs. In a sea of text on Slack and email, Skitch annotations are a refreshing way to make a single, obvious, and easy to digest point. Since Skitch shut down, I've looked for multiple alternatives that are: Free-ish, have similar styling, and are lightweight (no signin, no server syncing). I didn't find any, and that's how Pink Arrows was born.
 
+## Features
+- Drag-and-drop image annotation
+- Arrow, rectangle, text, emoji, and line segment tools
+- Line segment creation by drag-selecting two points or entering exact endpoints
+
 ## Contributing
 Easiest way to contribute is to toss ideas and features in Github Issues.
 
@@ -28,4 +33,3 @@ python3 -m http.server
 ## Roadmap / feature requests
 - [ ] Hotkey tooltips
 - [ ] Improve arrow dragging
-- [ ] Line feature (not an arrow, just a line)

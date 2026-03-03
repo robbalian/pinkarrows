@@ -92,6 +92,16 @@
                     d="M14 2.5a.5.5 0 0 0-.5-.5h-6a.5.5 0 0 0 0 1h4.793L2.146 13.146a.5.5 0 0 0 .708.708L13 3.707V8.5a.5.5 0 0 0 1 0v-6z" />
             </svg>
             Arrow</button>
+        <button data-mode="LINE" class="tool-btn" title="(l) Line Segment">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                fill="#FF007F" class="bi bi-slash-lg" viewBox="0 0 16 16">
+                <path d="M11.293 1.293a1 1 0 0 1 1.414 1.414L4.707 10.707a1 1 0 0 1-1.414-1.414z"/>
+            </svg>
+            Line</button>
+        <button class="tool-btn" id="line-endpoints-button" title="Create line from endpoints"
+            data-bs-toggle="modal" data-bs-target="#lineEndpointsModal">
+            Endpoints
+        </button>
 
         <button data-mode="RECT" class="tool-btn" title="(r) Rectangle">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FF007F" class="bi bi-app"
@@ -190,12 +200,13 @@
                     <div class="hotkeys-container" style="text-align: left;">
                     <h5>Hotkeys</h5>
                     <ul class="list-unstyled">
-                        <li><strong>(s)</strong> Select</li>
-                        <li><strong>(a)</strong> Arrow</li>
-                        <li><strong>(r)</strong> Rectangle</li>
-                        <li><strong>(o)</strong> Oval</li>
-                        <li><strong>(t)</strong> Text</li>
-                        <li><strong>(e)</strong> Emoji</li>
+                        <li><strong>(s)</strong>/<strong>(1)</strong> Select</li>
+                        <li><strong>(a)</strong>/<strong>(2)</strong> Arrow</li>
+                        <li><strong>(r)</strong>/<strong>(3)</strong> Rectangle</li>
+                        <li><strong>(t)</strong>/<strong>(4)</strong> Text</li>
+                        <li><strong>(e)</strong>/<strong>(5)</strong> Emoji</li>
+                        <li><strong>(l)</strong>/<strong>(6)</strong> Line Segment</li>
+                        <li><strong>(o)</strong>/<strong>(7)</strong> Oval</li>
                         <li><strong>(Ctrl-Z)</strong> Undo</li>
                         <li><strong>(Ctrl-Shift-Z)</strong> Redo</li>
                         <li><strong>(d)</strong> Download</li>
@@ -203,6 +214,44 @@
                         </ul>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="lineEndpointsModal" tabindex="-1" aria-labelledby="lineEndpointsLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="line-endpoints-form">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="lineEndpointsLabel">Create Line Segment</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-3">Enter two endpoints (x1,y1) and (x2,y2) in canvas coordinates.</p>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <label for="line-x1" class="form-label">x1</label>
+                                <input type="number" step="any" class="form-control" id="line-x1" required>
+                            </div>
+                            <div class="col-6">
+                                <label for="line-y1" class="form-label">y1</label>
+                                <input type="number" step="any" class="form-control" id="line-y1" required>
+                            </div>
+                            <div class="col-6">
+                                <label for="line-x2" class="form-label">x2</label>
+                                <input type="number" step="any" class="form-control" id="line-x2" required>
+                            </div>
+                            <div class="col-6">
+                                <label for="line-y2" class="form-label">y2</label>
+                                <input type="number" step="any" class="form-control" id="line-y2" required>
+                            </div>
+                        </div>
+                        <div id="line-endpoints-error" class="invalid-feedback d-block d-none mt-2"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Line</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
