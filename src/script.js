@@ -1,4 +1,5 @@
 import { createArrow, setArrowHeadPoint } from './arrow.js'
+import { hasDistinctEndpoints, parseCoordinate, validateLineEndpoints } from './line-utils.mjs'
 // Import the functions you need from the SDKs you need
 
 var emojiPicker = null;
@@ -69,6 +70,30 @@ $(document).ready(function () {
   $('#download-button').click(() => {
     downloadCroppedWithWatermark()
   })
+
+  $('#line-endpoints-form').submit(function (e) {
+    e.preventDefault();
+
+    const x1 = parseCoordinate($('#line-x1').val());
+    const y1 = parseCoordinate($('#line-y1').val());
+    const x2 = parseCoordinate($('#line-x2').val());
+    const y2 = parseCoordinate($('#line-y2').val());
+
+    const validation = validateLineEndpoints(x1, y1, x2, y2, canvas.width, canvas.height);
+    if (!validation.valid) {
+      showLineEndpointValidationError(validation.message);
+      return;
+    }
+
+    clearLineEndpointValidationError();
+    addLineSegment(x1, y1, x2, y2);
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('lineEndpointsModal')).hide();
+    $.toast("Line created");
+  });
+
+  $('#line-endpoints-form input').on('input', () => {
+    clearLineEndpointValidationError();
+  });
 
   $('#copy-image-to-clipboard-button').click(() => {
     copyImageToClipboard()
@@ -204,7 +229,8 @@ let Mode = Object.freeze({
   "EDIT_TEXT": 3,
   "EDIT_RECT": 4,
   "ARROW": 5,
-  "EMOJI": 6
+  "LINE": 6,
+  "EMOJI": 7
 });
 let mode = Mode.NONE
 setMode(Mode.NONE);
@@ -235,6 +261,34 @@ function setMode(newMode) {
     }
   }
 
+}
+
+function showLineEndpointValidationError(message) {
+  $('#line-endpoints-error').removeClass('d-none').text(message);
+  $('#line-endpoints-form input').addClass('is-invalid');
+  $.toast(message);
+}
+
+function clearLineEndpointValidationError() {
+  $('#line-endpoints-error').addClass('d-none').text('');
+  $('#line-endpoints-form input').removeClass('is-invalid');
+}
+
+function addLineSegment(x1, y1, x2, y2) {
+  const line = new fabric.Line([x1, y1, x2, y2], {
+    stroke: '#FF007F',
+    strokeWidth: 4,
+    selectable: true,
+    hasBorders: false,
+    hasControls: true,
+    strokeLineCap: 'round',
+    strokeUniform: true,
+  });
+  canvas.add(line);
+  canvas.setActiveObject(line);
+  currentlyCreatingObject = null;
+  setMode(Mode.NONE);
+  redrawCanvas();
 }
 
 let currentlyCreatingObject = null;
@@ -450,6 +504,10 @@ document.addEventListener('keydown', function (e) {
     case 'a':
       setMode(Mode.ARROW);
       break;
+    case '6':
+    case 'l':
+      setMode(Mode.LINE);
+      break;
     case '5':
     case 'e':
       openEmojiPicker()
@@ -658,6 +716,20 @@ canvas.on('mouse:down', function (options) {
     currentlyCreatingObject = arrow;
 
     redrawCanvas();
+  } else if (mode == Mode.LINE) {
+    let line = new fabric.Line([origX, origY, origX, origY], {
+      stroke: '#FF007F',
+      strokeWidth: 4,
+      selectable: true,
+      hasBorders: false,
+      hasControls: true,
+      strokeLineCap: 'round',
+      strokeUniform: true,
+    });
+
+    canvas.add(line);
+    currentlyCreatingObject = line;
+    redrawCanvas();
   } else if (mode == Mode.NONE) {
 
   }
@@ -695,6 +767,11 @@ canvas.on('mouse:move', function (o) {
       let arrow = currentlyCreatingObject
       setArrowHeadPoint(arrow, pointer.x, pointer.y)
     }
+  } else if (mode == Mode.LINE) {
+    if (currentlyCreatingObject) {
+      currentlyCreatingObject.set({ x2: pointer.x, y2: pointer.y });
+      currentlyCreatingObject.setCoords();
+    }
   }
 
   //arrow.set({ x2: pointer.x, y2: pointer.y });
@@ -708,6 +785,18 @@ canvas.on('mouse:up', function (o) {
     currentlyCreatingObject = null;
     setMode(Mode.NONE);
   } else if (mode == Mode.ARROW) {
+    canvas.setActiveObject(canvas.item(canvas.getObjects().length - 1))
+    currentlyCreatingObject = null;
+    setMode(Mode.NONE);
+  } else if (mode == Mode.LINE) {
+    const line = currentlyCreatingObject;
+    if (line && !hasDistinctEndpoints(line.x1, line.y1, line.x2, line.y2)) {
+      canvas.remove(line);
+      $.toast("Line endpoints must be different");
+      currentlyCreatingObject = null;
+      redrawCanvas();
+      return;
+    }
     canvas.setActiveObject(canvas.item(canvas.getObjects().length - 1))
     currentlyCreatingObject = null;
     setMode(Mode.NONE);
