@@ -438,15 +438,19 @@ document.addEventListener('keydown', function (e) {
     return;
   }
   switch (e.key) {
+    case '4':
     case 't':
       setMode(Mode.TEXT);
       break;
+    case '3':
     case 'r':
       setMode(Mode.RECT);
       break;
+    case '2':
     case 'a':
       setMode(Mode.ARROW);
       break;
+    case '5':
     case 'e':
       openEmojiPicker()
       setMode(Mode.EMOJI)
@@ -457,6 +461,7 @@ document.addEventListener('keydown', function (e) {
     case 'c':
       copyImageToClipboard()
     // additional cases can be added as you add more features
+    case '1':
     default:
       setMode(Mode.NONE);
   }
