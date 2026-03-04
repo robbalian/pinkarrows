@@ -98,10 +98,6 @@
                 <path d="M11.293 1.293a1 1 0 0 1 1.414 1.414L4.707 10.707a1 1 0 0 1-1.414-1.414z"/>
             </svg>
             Line</button>
-        <button class="tool-btn" id="line-endpoints-button" title="Create line from endpoints"
-            data-bs-toggle="modal" data-bs-target="#lineEndpointsModal">
-            Endpoints
-        </button>
 
         <button data-mode="RECT" class="tool-btn" title="(r) Rectangle">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FF007F" class="bi bi-app"
@@ -214,44 +210,6 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="lineEndpointsModal" tabindex="-1" aria-labelledby="lineEndpointsLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form id="line-endpoints-form">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="lineEndpointsLabel">Create Line Segment</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="mb-3">Enter two endpoints (x1,y1) and (x2,y2) in canvas coordinates.</p>
-                        <div class="row g-2">
-                            <div class="col-6">
-                                <label for="line-x1" class="form-label">x1</label>
-                                <input type="number" step="any" class="form-control" id="line-x1" required>
-                            </div>
-                            <div class="col-6">
-                                <label for="line-y1" class="form-label">y1</label>
-                                <input type="number" step="any" class="form-control" id="line-y1" required>
-                            </div>
-                            <div class="col-6">
-                                <label for="line-x2" class="form-label">x2</label>
-                                <input type="number" step="any" class="form-control" id="line-x2" required>
-                            </div>
-                            <div class="col-6">
-                                <label for="line-y2" class="form-label">y2</label>
-                                <input type="number" step="any" class="form-control" id="line-y2" required>
-                            </div>
-                        </div>
-                        <div id="line-endpoints-error" class="invalid-feedback d-block d-none mt-2"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Create Line</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>

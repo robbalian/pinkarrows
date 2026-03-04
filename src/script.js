@@ -1,5 +1,5 @@
 import { createArrow, setArrowHeadPoint } from './arrow.js'
-import { hasDistinctEndpoints, parseCoordinate, validateLineEndpoints } from './line-utils.mjs'
+import { hasDistinctEndpoints } from './line-utils.mjs'
 // Import the functions you need from the SDKs you need
 
 var emojiPicker = null;
@@ -71,29 +71,6 @@ $(document).ready(function () {
     downloadCroppedWithWatermark()
   })
 
-  $('#line-endpoints-form').submit(function (e) {
-    e.preventDefault();
-
-    const x1 = parseCoordinate($('#line-x1').val());
-    const y1 = parseCoordinate($('#line-y1').val());
-    const x2 = parseCoordinate($('#line-x2').val());
-    const y2 = parseCoordinate($('#line-y2').val());
-
-    const validation = validateLineEndpoints(x1, y1, x2, y2, canvas.width, canvas.height);
-    if (!validation.valid) {
-      showLineEndpointValidationError(validation.message);
-      return;
-    }
-
-    clearLineEndpointValidationError();
-    addLineSegment(x1, y1, x2, y2);
-    bootstrap.Modal.getOrCreateInstance(document.getElementById('lineEndpointsModal')).hide();
-    $.toast("Line created");
-  });
-
-  $('#line-endpoints-form input').on('input', () => {
-    clearLineEndpointValidationError();
-  });
 
   $('#copy-image-to-clipboard-button').click(() => {
     copyImageToClipboard()
@@ -265,33 +242,6 @@ function setMode(newMode) {
 
 }
 
-function showLineEndpointValidationError(message) {
-  $('#line-endpoints-error').removeClass('d-none').text(message);
-  $('#line-endpoints-form input').addClass('is-invalid');
-  $.toast(message);
-}
-
-function clearLineEndpointValidationError() {
-  $('#line-endpoints-error').addClass('d-none').text('');
-  $('#line-endpoints-form input').removeClass('is-invalid');
-}
-
-function addLineSegment(x1, y1, x2, y2) {
-  const line = new fabric.Line([x1, y1, x2, y2], {
-    stroke: '#FF007F',
-    strokeWidth: 4,
-    selectable: true,
-    hasBorders: false,
-    hasControls: true,
-    strokeLineCap: 'round',
-    strokeUniform: true,
-  });
-  canvas.add(line);
-  canvas.setActiveObject(line);
-  currentlyCreatingObject = null;
-  setMode(Mode.NONE);
-  redrawCanvas();
-}
 
 let currentlyCreatingObject = null;
 let copiedObject = null;
