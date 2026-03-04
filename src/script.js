@@ -444,11 +444,11 @@ document.addEventListener('keydown', function (e) {
     return;
   }
   switch (e.key) {
-    case '4':
+    case '6':
     case 't':
       setMode(Mode.TEXT);
       break;
-    case '3':
+    case '4':
     case 'r':
       setMode(Mode.RECT);
       break;
@@ -456,15 +456,15 @@ document.addEventListener('keydown', function (e) {
     case 'a':
       setMode(Mode.ARROW);
       break;
-    case '6':
+    case '3':
     case 'l':
       setMode(Mode.LINE);
       break;
-    case '7':
+    case '5':
     case 'o':
       setMode(Mode.OVAL);
       break;
-    case '5':
+    case '7':
     case 'e':
       openEmojiPicker()
       setMode(Mode.EMOJI)
