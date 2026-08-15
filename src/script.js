@@ -43,7 +43,7 @@ async function loadEmojiPopup() {
       top: 100,
       fontFamily: 'sans-serif',
       fontSize: 100,
-      fill: '#FF007F',  // Pink color
+      fill: annotationColor,
       stroke: '#ffffff', // White border
       strokeWidth: 2,
       shadow: 'rgba(0,0,0,0.3) 2px 2px 2px',  // Black shadow
@@ -130,8 +130,52 @@ $(document).ready(function () {
 
   }
 
+  // Build the color palette
+  const colorPalette = $('#color-palette');
+  const customColorInput = $('#custom-color-input');
+  ANNOTATION_COLORS.forEach(color => {
+    const swatch = $('<button type="button" class="color-swatch"></button>')
+      .attr('data-color', color)
+      .attr('title', color)
+      .css('background-color', color);
+    swatch.click(() => {
+      setAnnotationColor(color);
+      colorPalette.addClass('d-none');
+    });
+    customColorInput.before(swatch);
+  });
+
+  const customSwatch = $('<button type="button" id="custom-color-swatch" class="color-swatch" title="Custom color"></button>');
+  customSwatch.click(() => {
+    customColorInput.val(annotationColor);
+    customColorInput[0].click();
+  });
+  customColorInput.before(customSwatch);
+
+  customColorInput.on('input', function () {
+    setAnnotationColor(this.value);
+  });
+
+  $('#color-button').click(function (e) {
+    e.stopPropagation();
+    colorPalette.toggleClass('d-none');
+  });
+
+  // Close the palette when clicking anywhere else
+  $(document).click(function (e) {
+    if (!$(e.target).closest('.color-picker-container').length) {
+      colorPalette.addClass('d-none');
+    }
+  });
+
+  // Reflect the persisted color in the toolbar
+  setAnnotationColor(annotationColor);
+
   $(".tool-btn").click(function () {
     let modeText = $(this).attr("data-mode");
+    if (!modeText) {
+      return;
+    }
     setMode(Mode[modeText]); // set global mode
 
     // Remove 'selected' class from all buttons
@@ -242,6 +286,46 @@ function setMode(newMode) {
 
 }
 
+
+// Annotation color, shared by all tools and persisted like the watermark toggle
+const DEFAULT_ANNOTATION_COLOR = '#FF007F';
+const ANNOTATION_COLORS = [
+  '#FF007F', '#FF3B30', '#FF9500', '#FFCC00', '#34C759', '#00C7BE',
+  '#32ADE6', '#007AFF', '#5856D6', '#AF52DE', '#FF2DCF', '#FFFFFF',
+  '#C7C7CC', '#8E8E93', '#3A3A3C', '#000000'
+];
+let annotationColor = localStorage.getItem('annotationColor') || DEFAULT_ANNOTATION_COLOR;
+
+function applyColorToObject(obj, color) {
+  if (obj.type === 'activeSelection' || obj.type === 'group') {
+    obj.forEachObject(o => applyColorToObject(o, color));
+    return;
+  }
+  if (obj.type === 'image') {
+    return;
+  }
+  // Filled shapes recolor their fill; outlined shapes recolor their stroke
+  if (obj.type === 'polygon' || obj.type === 'textbox' || obj.type === 'i-text') {
+    obj.set('fill', color);
+  } else {
+    obj.set('stroke', color);
+  }
+  obj.dirty = true;
+}
+
+function setAnnotationColor(color) {
+  annotationColor = color;
+  localStorage.setItem('annotationColor', color);
+  $('#color-swatch-current').css('background-color', color);
+  $('.color-swatch').removeClass('selected');
+  $(`.color-swatch[data-color='${color.toUpperCase()}']`).addClass('selected');
+
+  const activeObject = canvas.getActiveObject();
+  if (activeObject) {
+    applyColorToObject(activeObject, color);
+    redrawCanvas();
+  }
+}
 
 let currentlyCreatingObject = null;
 let copiedObject = null;
@@ -631,7 +715,7 @@ canvas.on('mouse:down', function (options) {
       left: pointer.x,
       top: pointer.y,
       fontFamily: 'sans-serif',
-      fill: '#FF007F',  // Pink color
+      fill: annotationColor,
       stroke: '#ffffff', // White border
       strokeWidth: 2,
       shadow: 'rgba(0,0,0,0.3) 2px 2px 2px',  // Black shadow
@@ -668,7 +752,7 @@ canvas.on('mouse:down', function (options) {
       height: 50,
       angle: 0,
       fill: 'rgba(255,255,255,0)',
-      stroke: '#FF007F',  // Pink color
+      stroke: annotationColor,
       strokeWidth: 4,
       selectable: true,
       hasBorders: false,
@@ -700,7 +784,7 @@ canvas.on('mouse:down', function (options) {
       ry: 25,
       angle: 0,
       fill: 'rgba(255,255,255,0)',
-      stroke: '#FF007F',  // Pink color
+      stroke: annotationColor,
       strokeWidth: 4,
       selectable: true,
       hasBorders: false,
@@ -720,14 +804,14 @@ canvas.on('mouse:down', function (options) {
     redrawCanvas();
   } else if (mode == Mode.ARROW) {
 
-    let arrow = createArrow(origX, origY);
+    let arrow = createArrow(origX, origY, annotationColor);
     canvas.add(arrow);
     currentlyCreatingObject = arrow;
 
     redrawCanvas();
   } else if (mode == Mode.LINE) {
     let line = new fabric.Line([origX, origY, origX, origY], {
-      stroke: '#FF007F',
+      stroke: annotationColor,
       strokeWidth: 4,
       selectable: true,
       hasBorders: false,
