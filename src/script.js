@@ -513,7 +513,7 @@ async function copyImageToClipboard() {
 // Keyboard event to toggle modes
 document.addEventListener('keydown', function (e) {
   // cmd + enter should exit edit mode
-  if ((e.ctrlKey || e.metaKey) && e.which === 13) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
     if (mode == Mode.EDIT_TEXT) {
       let textbox = canvas.getActiveObject()
 
@@ -571,12 +571,12 @@ document.addEventListener('keydown', function (e) {
         setMode(Mode.NONE);
     }
   }
-  if ((e.ctrlKey || e.metaKey) && e.which === 67) {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
     copy();
   }
 
   // Ctrl+V or Cmd+V for MacOS
-  if ((e.ctrlKey || e.metaKey) && e.which === 86) {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'v') {
     // Decide what to paste from the OS clipboard contents, so an old internal
     // copy can't permanently block image pasting (#48)
     navigator.clipboard.read().then(async items => {
@@ -610,19 +610,21 @@ document.addEventListener('keydown', function (e) {
     })
   }
 
-  if ((e.ctrlKey || e.metaKey) && e.which === 90 && !e.shiftKey) {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
     canvas.undo();
     redrawCanvas()
   }
 
   // Ctrl+Shift+Z or Cmd+Shift+Z for MacOS
-  if ((e.ctrlKey || e.metaKey) && e.which === 90 && e.shiftKey) {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && e.shiftKey) {
     canvas.redo();
     redrawCanvas()
   }
 
   // Ctrl+A or Cmd-A selects all objects
-  if ((e.ctrlKey || e.metaKey) && e.which === 65) {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a') {
+    // Keep the browser from also selecting the page's text and buttons
+    e.preventDefault();
     var allObjects = canvas.getObjects();
 
     if (allObjects.length) {
