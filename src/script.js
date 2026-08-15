@@ -358,19 +358,23 @@ function handleFiles(files) {
   ([...files]).forEach(previewFile);
 }
 
+// Scale an image down so it fits within the visible canvas, preserving
+// aspect ratio; small images are left at their natural size
+function scaleImageToFit(oImg) {
+  const maxWidth = canvas.width * 0.9;
+  const maxHeight = canvas.height * 0.8;
+  const scaleFactor = Math.min(1, maxWidth / oImg.width, maxHeight / oImg.height);
+  if (scaleFactor < 1) {
+    oImg.scale(scaleFactor);
+  }
+}
+
 function previewFile(file) {
   let reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onloadend = function () {
     fabric.Image.fromURL(reader.result, function (oImg) {
-      // Calculate the maximum width (90% of canvas width)
-      const maxWidth = canvas.width * 0.9;
-
-      // Scale the image if it's wider than maxWidth
-      if (oImg.width > maxWidth) {
-        const scaleFactor = maxWidth / oImg.width;
-        oImg.scale(scaleFactor);
-      }
+      scaleImageToFit(oImg);
 
       oImg.set({
         left: (canvas.width - oImg.getScaledWidth()) / 2,  // Center horizontally
@@ -644,14 +648,7 @@ function pasteImageBlob(blob) {
   const reader = new FileReader();
   reader.onload = function(event) {
     fabric.Image.fromURL(event.target.result, function(oImg) {
-      // Calculate the max width (90% of canvas width)
-      const maxWidth = canvas.width * 0.9;
-
-      // Scale image if wider than maxWidth
-      if (oImg.width > maxWidth) {
-        const scaleFactor = maxWidth / oImg.width;
-        oImg.scale(scaleFactor);
-      }
+      scaleImageToFit(oImg);
 
       oImg.set({
         left: (canvas.width - oImg.getScaledWidth()) / 2,
