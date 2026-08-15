@@ -18,13 +18,13 @@ function lerp(start, end, amt) {
   return (1 - amt) * start + amt * end
 }
 
-function createArrow(left, top) {
+function createArrow(left, top, color) {
   // Define the points for a simple arrow shape
 
   var polygon = new fabric.Polygon(structuredClone(originalPoints), {
     left: left-40,
     top: top-5,
-    fill: '#FF007F',
+    fill: color || '#FF007F',
     originX: 'left',
     strokeWidth: 4,
     stroke: 'white',
