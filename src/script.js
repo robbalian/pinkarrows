@@ -531,41 +531,45 @@ document.addEventListener('keydown', function (e) {
   if (mode == Mode.EDIT_TEXT) {
     return;
   }
-  switch (e.key) {
-    case '6':
-    case 't':
-      setMode(Mode.TEXT);
-      break;
-    case '4':
-    case 'r':
-      setMode(Mode.RECT);
-      break;
-    case '2':
-    case 'a':
-      setMode(Mode.ARROW);
-      break;
-    case '3':
-    case 'l':
-      setMode(Mode.LINE);
-      break;
-    case '5':
-    case 'o':
-      setMode(Mode.OVAL);
-      break;
-    case '7':
-    case 'e':
-      openEmojiPicker()
-      setMode(Mode.EMOJI)
-      break
-    case 'd':
-      downloadCroppedWithWatermark();
-      break;
-    case 'c':
-      copyImageToClipboard()
-    // additional cases can be added as you add more features
-    case '1':
-    default:
-      setMode(Mode.NONE);
+  // Bare-key hotkeys only; Ctrl/Cmd combos are handled below (otherwise
+  // Ctrl+C would also trigger the full-image copy, Ctrl+A the arrow tool, etc.)
+  if (!e.ctrlKey && !e.metaKey) {
+    switch (e.key) {
+      case '6':
+      case 't':
+        setMode(Mode.TEXT);
+        break;
+      case '4':
+      case 'r':
+        setMode(Mode.RECT);
+        break;
+      case '2':
+      case 'a':
+        setMode(Mode.ARROW);
+        break;
+      case '3':
+      case 'l':
+        setMode(Mode.LINE);
+        break;
+      case '5':
+      case 'o':
+        setMode(Mode.OVAL);
+        break;
+      case '7':
+      case 'e':
+        openEmojiPicker()
+        setMode(Mode.EMOJI)
+        break
+      case 'd':
+        downloadCroppedWithWatermark();
+        break;
+      case 'c':
+        copyImageToClipboard()
+      // additional cases can be added as you add more features
+      case '1':
+      default:
+        setMode(Mode.NONE);
+    }
   }
   if ((e.ctrlKey || e.metaKey) && e.which === 67) {
     copy();
