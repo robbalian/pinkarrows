@@ -485,56 +485,34 @@ document.addEventListener('keydown', function (e) {
 
   // Ctrl+V or Cmd+V for MacOS
   if ((e.ctrlKey || e.metaKey) && e.which === 86) {
-    // Check for object in clipboard
-    if (copiedObject) {
-      paste();
-      return;
-    }
-
-    // Try to get clipboard image data
-    navigator.clipboard.read().then(items => {
+    // Decide what to paste from the OS clipboard contents, so an old internal
+    // copy can't permanently block image pasting (#48)
+    navigator.clipboard.read().then(async items => {
       for (const item of items) {
-        if (item.types.includes('image/png' || 'image/jpeg')) {
-          item.getType('image/png').then(blob => {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-              fabric.Image.fromURL(event.target.result, function(oImg) {
-                // Calculate the max width (90% of canvas width)
-                const maxWidth = canvas.width * 0.9;
-
-                // Scale image if wider than maxWidth
-                if (oImg.width > maxWidth) {
-                  const scaleFactor = maxWidth / oImg.width;
-                  oImg.scale(scaleFactor);
-                }
-
-                oImg.set({
-                  left: (canvas.width - oImg.getScaledWidth()) / 2,
-                  top: canvas.height * .1,
-                  angle: 0
-                }).setCoords();
-
-                // Find insertion index
-                let insertIndex = canvas.getObjects().findIndex(obj =>
-                  obj.type !== 'image' && obj.type !== 'backgroundImage'
-                );
-
-                // if no non-image objects found, insert at the top
-                if (insertIndex === -1) {
-                  insertIndex = canvas.getObjects().length;
-                }
-
-                // Insert the image at the found index
-                canvas.insertAt(oImg, insertIndex);
-                redrawCanvas();
-                $.toast('Image pasted from clipboard');
-              });
-            };
-            reader.readAsDataURL(blob);
-          });
+        const imageType = item.types.find(t => t === 'image/png' || t === 'image/jpeg');
+        if (imageType) {
+          const blob = await item.getType(imageType);
+          pasteImageBlob(blob);
+          return;
+        }
+        if (copiedObject && item.types.includes('text/plain')) {
+          const text = await (await item.getType('text/plain')).text();
+          if (text === CLIPBOARD_OBJECT_MARKER) {
+            paste();
+            return;
+          }
         }
       }
+      // Nothing usable in the OS clipboard; fall back to the internal copy
+      if (copiedObject) {
+        paste();
+      }
     }).catch(err => {
+      // Clipboard read can be blocked by permissions; the internal copy still works
+      if (copiedObject) {
+        paste();
+        return;
+      }
       $.toast('Failed to paste image from clipboard');
       console.error('Failed to paste image from clipboard', err);
     })
@@ -565,12 +543,55 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
+// Written to the OS clipboard on copy so paste can tell whether the internal
+// copy or an image copied in another app is the most recent thing copied
+const CLIPBOARD_OBJECT_MARKER = 'pinkarrows:copied-object';
+
 function copy() {
   var activeObject = canvas.getActiveObject();
 
   if (activeObject) {
     copiedObject = activeObject;
+    navigator.clipboard.writeText(CLIPBOARD_OBJECT_MARKER).catch(() => {});
   }
+}
+
+function pasteImageBlob(blob) {
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    fabric.Image.fromURL(event.target.result, function(oImg) {
+      // Calculate the max width (90% of canvas width)
+      const maxWidth = canvas.width * 0.9;
+
+      // Scale image if wider than maxWidth
+      if (oImg.width > maxWidth) {
+        const scaleFactor = maxWidth / oImg.width;
+        oImg.scale(scaleFactor);
+      }
+
+      oImg.set({
+        left: (canvas.width - oImg.getScaledWidth()) / 2,
+        top: canvas.height * .1,
+        angle: 0
+      }).setCoords();
+
+      // Find insertion index
+      let insertIndex = canvas.getObjects().findIndex(obj =>
+        obj.type !== 'image' && obj.type !== 'backgroundImage'
+      );
+
+      // if no non-image objects found, insert at the top
+      if (insertIndex === -1) {
+        insertIndex = canvas.getObjects().length;
+      }
+
+      // Insert the image at the found index
+      canvas.insertAt(oImg, insertIndex);
+      redrawCanvas();
+      $.toast('Image pasted from clipboard');
+    });
+  };
+  reader.readAsDataURL(blob);
 }
 
 function paste() {
