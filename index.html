@@ -1,18 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Pink Arrows - Add text and draw on images, screenshots and screen captures</title>
-    <meta name="description"
-        content="Drag and drop an image, and add text, shapes, blurs, to the image. Free and simple to use." />
-    <link rel="canonical" href="https://www.pinkarrows.app" />
-    <meta property="og:title" content="Pink Arrows - Add text and draw on images, screenshots and screen captures" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Annotate Screenshots Online – Add Arrows, Text & Shapes Free | Pink Arrows</title>
+    <meta name="description"
+        content="Free online screenshot annotation tool. Add arrows, text, shapes and emoji to any image in your browser — no signup, no upload. Open-source Skitch alternative." />
+    <link rel="canonical" href="https://pinkarrows.app/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Pink Arrows" />
+    <meta property="og:url" content="https://pinkarrows.app/" />
+    <meta property="og:title" content="Annotate Screenshots Online – Add Arrows, Text & Shapes Free | Pink Arrows" />
+    <meta property="og:description"
+        content="Free online screenshot annotation tool. Add arrows, text, shapes and emoji to any image in your browser — no signup, no upload. Open-source Skitch alternative." />
+    <meta property="og:image" content="https://pinkarrows.app/assets/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Annotate Screenshots Online – Add Arrows, Text & Shapes Free | Pink Arrows" />
+    <meta name="twitter:description"
+        content="Free online screenshot annotation tool. Add arrows, text, shapes and emoji to any image in your browser — no signup, no upload." />
+    <meta name="twitter:image" content="https://pinkarrows.app/assets/og-image.png" />
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Pink Arrows",
+        "url": "https://pinkarrows.app/",
+        "description": "Free online screenshot annotation tool. Add arrows, text, rectangles, ovals, lines, and emoji to any image directly in your browser. No signup, no upload — everything runs locally.",
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "Any (Web Browser)",
+        "browserRequirements": "Requires JavaScript",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "sameAs": ["https://github.com/robbalian/pinkarrows"]
+    }
+    </script>
 
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
     <style>
-        body {
+        #app {
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -22,6 +53,21 @@
             display: flex;
             flex-grow: 1;
             border: 1px solid black;
+            overflow: hidden;
+        }
+
+        #seo-content {
+            max-width: 860px;
+        }
+
+        #seo-content h2 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        #seo-content h3 {
+            font-size: 1.15rem;
+            margin-top: 1.25rem;
         }
 
         .tool-btn.selected {
@@ -107,13 +153,14 @@
 </head>
 
 <body>
+    <div id="app">
     <header class="d-flex flex-wrap justify-content-between py-3 mb-3 border-bottom">
         <div class="d-flex align-items-center link-body-emphasis text-decoration-none ms-4">
             <div class="d-flex flex-row">
-                <img class="d-flex me-1" src="assets/logo.png" alt="PinkArrows" width="32" height="32">
+                <img class="d-flex me-1" src="assets/logo.png" alt="Pink Arrows logo" width="32" height="32">
                 <div class="d-flex flex-column">
                     <span class="fs-4 m-0 p-0">Pink Arrows</span>
-                    <h1 class="fs-16 m-0 p-0">Add text and draw on images or screen captures</h1>
+                    <h1 class="fs-16 m-0 p-0">Annotate screenshots online — add arrows, text and shapes to images, free</h1>
                 </div>
             </div>
         </div>
@@ -239,6 +286,99 @@
         </div>
         <canvas id="canvas" width="800" height="600"></canvas>
     </div>
+    </div><!-- /#app -->
+
+    <section id="seo-content" class="container py-5">
+        <h2>Annotate screenshots online — free, private, and instant</h2>
+        <p>Pink Arrows is a free online screenshot annotation tool. Paste or drag in any image and add arrows, text,
+            rectangles, ovals, lines, and emoji in seconds — then copy the annotated image straight back to your
+            clipboard or download it as a PNG. There's no account to create and nothing to install.</p>
+        <p>Everything runs locally in your browser: your screenshots are never uploaded to a server. That makes Pink
+            Arrows a safe way to mark up sensitive screenshots, internal dashboards, and customer data.</p>
+
+        <h2>How to annotate a screenshot</h2>
+        <ol>
+            <li><strong>Add your image.</strong> Paste it from the clipboard (Ctrl+V / ⌘V), drag and drop a file, or
+                click to select one.</li>
+            <li><strong>Mark it up.</strong> Draw arrows to point at what matters, box regions with rectangles or
+                ovals, and add text labels or emoji. Every tool has a one-key hotkey, and annotations can be any
+                color.</li>
+            <li><strong>Share it.</strong> Press <strong>c</strong> to copy the annotated image to your clipboard and
+                paste it into Slack, email, or a doc — or press <strong>d</strong> to download it.</li>
+        </ol>
+
+        <h2>Everything you need to mark up an image</h2>
+        <ul>
+            <li><strong>Add arrows to screenshots</strong> — bold, Skitch-style pink arrows (or any color you like)
+                that make your point instantly obvious.</li>
+            <li><strong>Add text to images</strong> — clear, readable labels for callouts, tutorials, and bug
+                reports.</li>
+            <li><strong>Highlight with shapes</strong> — rectangles, ovals, and straight lines for boxing UI elements
+                and regions.</li>
+            <li><strong>Emoji stamps</strong> — drop a ✅, ❌, or 👀 exactly where it's needed.</li>
+            <li><strong>Fast keyboard workflow</strong> — one-key tool switching, undo/redo, copy to clipboard, and
+                download.</li>
+        </ul>
+
+        <h2>A free, open-source Skitch alternative</h2>
+        <p>Pink Arrows was built by and for people who miss Skitch. When Skitch shut down, there was no lightweight
+            replacement with the same iconic style — free, no sign-in, no server syncing. Pink Arrows brings that
+            workflow to the web: the same bold pink arrows and dead-simple markup, in any browser on Mac, Windows,
+            Linux, or ChromeOS. The whole app is open source on
+            <a href="https://github.com/robbalian/pinkarrows">GitHub</a>.</p>
+
+        <h2>Frequently asked questions</h2>
+        <h3>Is Pink Arrows really free?</h3>
+        <p>Yes. Pink Arrows is completely free and open source. There are no premium tiers, limits, or sign-ups.</p>
+        <h3>Are my images uploaded anywhere?</h3>
+        <p>No. All annotation happens locally in your browser — your images never leave your device.</p>
+        <h3>Do I need to create an account?</h3>
+        <p>No. Just open the page, paste or drop an image, and start annotating.</p>
+        <h3>Can I turn off the watermark?</h3>
+        <p>Yes. Use the Watermark toggle in the toolbar to export images with no watermark.</p>
+        <h3>What does it work on?</h3>
+        <p>Any modern browser — Chrome, Safari, Firefox, or Edge — on Mac, Windows, Linux, or ChromeOS. There's
+            nothing to download or install.</p>
+    </section>
+
+    <footer class="border-top py-4 text-center text-muted">
+        <small>Pink Arrows — free online screenshot annotation. Open source on
+            <a href="https://github.com/robbalian/pinkarrows">GitHub</a>.</small>
+    </footer>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Is Pink Arrows really free?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. Pink Arrows is completely free and open source. There are no premium tiers, limits, or sign-ups." }
+            },
+            {
+                "@type": "Question",
+                "name": "Are my images uploaded anywhere?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. All annotation happens locally in your browser — your images never leave your device." }
+            },
+            {
+                "@type": "Question",
+                "name": "Do I need to create an account?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. Just open the page, paste or drop an image, and start annotating." }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I turn off the watermark?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. Use the Watermark toggle in the toolbar to export images with no watermark." }
+            },
+            {
+                "@type": "Question",
+                "name": "What does it work on?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Any modern browser — Chrome, Safari, Firefox, or Edge — on Mac, Windows, Linux, or ChromeOS. There's nothing to download or install." }
+            }
+        ]
+    }
+    </script>
     <!-- Button trigger modal -->
 
     <div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -267,7 +407,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
